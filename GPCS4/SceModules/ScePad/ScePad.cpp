@@ -60,13 +60,23 @@ int SceGamepad::setVibration(int32_t handle, const ScePadVibrationParam* pParam)
 
 SceKeyboard::SceKeyboard()
 {
-	auto videoOut = getVideoOut(SCE_VIDEO_HANDLE_MAIN);
-	m_window      = videoOut->getWindowHandle();
+	init();
 }
 
 SceKeyboard::~SceKeyboard()
 {
 }
+
+
+void SceKeyboard::init() 
+{
+	auto videoOut = getVideoOut(SCE_VIDEO_HANDLE_MAIN);
+	if (videoOut != nullptr)
+	{
+		m_window = videoOut->getWindowHandle();
+	}
+}
+
 
 int SceKeyboard::read(ScePadData* data, int32_t num)
 {
@@ -85,6 +95,11 @@ int SceKeyboard::readState(ScePadData* data)
 {
 	// TODO:
 	// Just quick and dirty implement currently. :)
+
+	if (m_window == nullptr) 
+	{
+		init();
+	}
 
 	uint32_t buttons = 0;
 	if (glfwGetKey(m_window, GLFW_KEY_T) == GLFW_PRESS)
