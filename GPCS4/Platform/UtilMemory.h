@@ -8,7 +8,7 @@
 namespace UtilMemory
 {;
 
-
+constexpr uint32_t VM_PAGE_SIZE = 0x1000;
 
 enum VM_PROTECT_FLAG
 {
@@ -30,15 +30,19 @@ enum VM_ALLOCATION_TYPE
 	VMAT_RESERVE_COMMIT = VMAT_RESERVE | VMAT_COMMIT
 };
 
+void* VMMapAligned(size_t nSize, uint32_t nProtectFlag, int align);
+
 void* VMMapFlexible(void *addrIn, size_t nSize, uint32_t nProtectFlag);
 
 void* VMMapDirect(size_t nSize, uint32_t nProtectFlag, uint32_t nType);
+
+void* VMMap(void* start, size_t nSize, uint32_t nProtectFlag, uint32_t flags, int fd, int64_t offset);
 
 void* VMAllocateDirect(/*TODO: use parameters*/);
 
 void VMUnMap(void* pAddr, size_t nSize);
 
-bool VMProtect(void* pAddr, size_t nSize, uint32_t nProtectFlag);
+bool VMProtect(void* pAddr, size_t nSize, uint32_t nProtectFlag, uint32_t* pOldProtectFlag = nullptr);
 
 int VMQueryProtection(void* addr, void** start, void** end, uint32_t* prot);
 
